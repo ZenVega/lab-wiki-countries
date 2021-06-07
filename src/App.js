@@ -1,23 +1,33 @@
-import logo from './logo.svg';
+import axios from 'axios'
+import {useEffect, useState} from 'react'
 import './App.css';
 
+import {Navbar} from './components/Navbar'
+import {CountriesList} from './components/CountriesList'
+import {CountryDetails} from './components/CountryDetails'
+
 function App() {
+
+  const [countries, setCountries] = useState([])
+
+  useEffect(() => {
+    axios
+    .get("https://restcountries.eu/rest/v2/all")
+    .then(data => setCountries(data.data))
+    .catch(err => console.log(err))
+    return () => {
+      setCountries([])
+    }
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Navbar/>
+      <div className="flex">
+        <CountriesList
+          countries={countries}/>
+        <CountryDetails/>
+      </div>
     </div>
   );
 }
